@@ -1,0 +1,47 @@
+<br>
+<div class="container ">
+<h2>SignUp here</h2>
+<br>
+<h6>{{userSignupForm.value | json}}</h6>
+
+<hr>
+<br>
+<h6>{{scrumUserModel | json}}</h6>
+
+<form #userSignupForm = "ngForm">
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" required name="email" class="form-control" #email = "ngModel"  [(ngModel)] = 'scrumUserModel.email' [class.is-invalid] = "email.invalid && email.touched">
+        <div *ngIf = "email.errors && ( email.invalid || email.touched )">
+          <small *ngIf="email.errors.required" class="text-danger">Email Input is required</small>
+          <small *ngIf="email.errors.pattern" class="text-danger">You added an invalid email</small>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" required name="fullname" #fullname = 'ngModel' class="form-control"  [(ngModel)] = 'scrumUserModel.fullname' [class.is-invalid] = "fullname.invalid && fullname.touched">
+        <div *ngIf = "fullname.errors && ( fullname.invalid || fullname.touched )">
+          <small *ngIf="fullname.errors.required" class="text-danger">Full name must be specified</small>
+
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" required name="password" #password = 'ngModel' class="form-control"  [(ngModel)] = 'scrumUserModel.password' [class.is-invalid] = "password.invalid && password.touched">
+        <div *ngIf = "password.errors && ( password.invalid || password.touched )">
+          <small *ngIf="password.errors.required" class="text-danger">Password Input is required</small>
+          <small *ngIf="password.errors.pattern" class="text-danger">You added an invalid password</small>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="userType">User Type</label>
+        <select class="custom-select form control" [(ngModel)] = 'scrumUserModel.usertype' >
+          <option *ngFor = "let eachElement of usertype" class= "form-group" [value] = "eachElement">{{eachElement}}</option>
+        </select>
+      </div>
+      <button type="submit" name="submit" class="btn btn-primary">Sign up</button>
+
+
+</form>
+</div>
