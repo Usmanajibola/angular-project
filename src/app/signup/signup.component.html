@@ -12,9 +12,9 @@
 
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="text" required name="email" class="form-control" #email = "ngModel"  [(ngModel)] = 'scrumUserModel.email' [class.is-invalid] = "email.invalid && email.touched">
+        <input type="text" required name="email" class="form-control" pattern='^\S+@\S+\.com$' #email = "ngModel"  [(ngModel)] = 'scrumUserModel.email' [class.is-invalid] = "email.invalid && email.touched">
         <div *ngIf = "email.errors && ( email.invalid || email.touched )">
-          <small *ngIf="email.errors.required" class="text-danger">Email Input is required</small>
+          <small *ngIf="email.errors.required && email.touched" class="text-danger">Email Input is required</small>
           <small *ngIf="email.errors.pattern" class="text-danger">You added an invalid email</small>
         </div>
       </div>
@@ -22,15 +22,15 @@
         <label for="fullName">Full Name</label>
         <input type="text" required name="fullname" #fullname = 'ngModel' class="form-control"  [(ngModel)] = 'scrumUserModel.fullname' [class.is-invalid] = "fullname.invalid && fullname.touched">
         <div *ngIf = "fullname.errors && ( fullname.invalid || fullname.touched )">
-          <small *ngIf="fullname.errors.required" class="text-danger">Full name must be specified</small>
+          <small *ngIf="fullname.errors.required && fullname.touched" class="text-danger">Full name must be specified</small>
 
         </div>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" required name="password" #password = 'ngModel' class="form-control"  [(ngModel)] = 'scrumUserModel.password' [class.is-invalid] = "password.invalid && password.touched">
+        <input type="password" required name="password" pattern = '^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$' #password = 'ngModel' class="form-control"  [(ngModel)] = 'scrumUserModel.password' [class.is-invalid] = "password.invalid && password.touched">
         <div *ngIf = "password.errors && ( password.invalid || password.touched )">
-          <small *ngIf="password.errors.required" class="text-danger">Password Input is required</small>
+          <small *ngIf="password.errors.required && password.touched" class="text-danger">Password Input is required</small>
           <small *ngIf="password.errors.pattern" class="text-danger">You added an invalid password</small>
         </div>
       </div>

@@ -6,7 +6,7 @@
       <label for="email">Email</label>
       <input type="text" name="email" required class = "form-control" pattern = "^\S+@\S+\.com$"  #email = 'ngModel' [(ngModel)] = "userLoginModel.email" [class.is-invalid] = "email.invalid && email.touched">
       <div *ngIf = "email.errors && ( email.invalid || email.touched )">
-        <small *ngIf="email.errors.required" class="text-danger">Email Input is required</small>
+        <small *ngIf="email.errors.required && email.touched" class="text-danger">Email Input is required</small>
         <small *ngIf="email.errors.pattern" class="text-danger">You added an invalid email</small>
       </div>
     </div>
@@ -14,7 +14,7 @@
       <label for="password">Password</label>
       <input type="password" required name="password" pattern = '^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$' class = "form-control"  #password = 'ngModel' [(ngModel)] = "userLoginModel.password" [class.is-invalid] = "password.invalid && password.touched">
       <div *ngIf = "password.errors && ( password.invalid || password.touched )">
-        <small *ngIf="password.errors.required" class="text-danger">Password Input is required</small>
+        <small *ngIf="password.errors.required && password.touched" class="text-danger">Password Input is required</small>
         <small *ngIf="password.errors.pattern" class="text-danger">You added an invalid password</small>
       </div>
     </div>
@@ -22,7 +22,7 @@
       <label for="projectname">Project name</label>
       <input type="text" name="projectname" required class = "form-control"  #projectname = 'ngModel' [(ngModel)] = "userLoginModel.projectname" [class.is-invalid] = "projectname.invalid && projectname.touched">
       <div *ngIf = "projectname.errors && ( projectname.invalid || projectname.touched )">
-        <small *ngIf="projectname.errors.required" class="text-danger">Project name must be specified</small>
+        <small *ngIf="projectname.errors.required && projectname.touched" class="text-danger">Project name must be specified</small>
 
       </div>
     </div>
