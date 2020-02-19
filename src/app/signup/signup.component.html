@@ -8,7 +8,11 @@
 <br>
 <h6>{{scrumUserModel | json}}</h6>
 
-<form #userSignupForm = "ngForm">
+
+
+<h5>{{feedback}}</h5>
+
+<form #userSignupForm = "ngForm" novalidate (ngSubmit)="onSubmit()">
 
       <div class="form-group">
         <label for="email">Email</label>
@@ -40,6 +44,14 @@
           <option *ngFor = "let eachElement of usertype" class= "form-group" [value] = "eachElement">{{eachElement}}</option>
         </select>
       </div>
+      <div class="form-group">
+        <label for="projectname">Project Name</label>
+        <input type="text" required name="projectname" #projectname = 'ngModel' class="form-control"  [(ngModel)] = 'scrumUserModel.projectname' [class.is-invalid] = "projectname.invalid && projectname.touched">
+        <div *ngIf = "projectname.errors && ( projectname.invalid || projectname.touched )">
+          <small *ngIf="projectname.errors.required && projectname.touched" class="text-danger">Project name must be specified</small>
+
+        </div>
+      </div> 
       <button type="submit" name="submit" class="btn btn-primary">Sign up</button>
 
 

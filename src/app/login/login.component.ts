@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Userlogin} from '../userlogin';
+//import { ScrumUserLoginData } from '../scrumuser';
+import { ScrumdataService } from '../scrumdata.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,9 +10,35 @@ import {Userlogin} from '../userlogin';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+
+  scrumUserLogin = {'email':'', 'password':'', 'projectname':''};
+
+  constructor(private _scrumdataService: ScrumdataService, private _router:Router) { }
 
   ngOnInit(): void {
   }
-  userLoginModel = new Userlogin('', '', '');
+  feedback = '';
+
+
+  onLoginSubmit() {
+    console.log(this.scrumUserLogin);
+    this._scrumdataService.login(this.scrumUserLogin).subscribe(
+
+
+      data => {
+        console.log('Success', data),
+        //this.feedback = 'Login successful',
+        localStorage.setItem('token', data.token)
+        this._router.navigate(['/scrumboard'])
+      },
+
+      error => {
+        console.log('Error', error)
+        this.feedback = 'Invalid credentials'
+      }
+
+
+  )
+
+}
 }
