@@ -40,7 +40,7 @@
       </div>
       <div class="form-group">
         <label for="userType">User Type</label>
-        <select class="custom-select form control" [(ngModel)] = 'scrumUserModel.usertype' name='usertype'>
+        <select class="custom-select form-control" [(ngModel)] = 'scrumUserModel.usertype' name='usertype'>
           <option *ngFor = "let eachElement of usertype" class= "form-group" [value] = "eachElement">{{eachElement}}</option>
         </select>
       </div>

@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
 
   scrumUserLogin = {'email':'', 'password':'', 'projectname':''};
 
+
   constructor(private _scrumdataService: ScrumdataService, private _router:Router) { }
 
   ngOnInit(): void {
@@ -28,8 +29,11 @@ export class LoginComponent implements OnInit {
       data => {
         console.log('Success', data),
         //this.feedback = 'Login successful',
+        localStorage.setItem('Authuser', JSON.stringify(this.scrumUserLogin));
+        localStorage.setItem('Authobj', JSON.stringify(data));
         localStorage.setItem('token', data.token)
-        this._router.navigate(['/scrumboard'])
+
+        this._router.navigate(['/scrumboard', data['project_id']])
       },
 
       error => {
