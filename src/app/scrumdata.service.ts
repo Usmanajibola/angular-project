@@ -46,12 +46,12 @@ public httpOptions = {
     return this._http.get<any>(this._scrumProjectUrl + project_id, this.httpOptions);
   }
 
-  updateTask(goal): Observable<any>{
+  updateTask(goal, status): Observable<any>{
     this.token = localStorage.getItem('token')
     this.logincred = JSON.parse(localStorage.getItem('Authuser'))
     this.logincred = btoa(`${this.logincred.email}:${this.logincred.password}`);
     console.log(this.logincred);
-    return this._http.patch<any>(this._taskUpdateUrl + goal.id + '/', {status: parseInt(goal.status)}, {
+    return this._http.patch<any>(this._taskUpdateUrl + goal.id + '/', {status: parseInt(status)}, {
       headers : new HttpHeaders().set('Authorization', `Basic ${this.logincred}==`)
     });
 

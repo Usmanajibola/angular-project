@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScrumdataService } from '../scrumdata.service';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragEnter, CdkDragExit } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-scrumboard',
@@ -37,7 +37,7 @@ export class ScrumboardComponent implements OnInit {
 
     this.project_id = parseInt((this._route.snapshot.paramMap.get('project_id')));
     this.getProjectGoals();
-    console.log(this._participants)
+    console.log(this.tftw);
 
 
 
@@ -63,44 +63,32 @@ export class ScrumboardComponent implements OnInit {
     }
   }
 
-  drop(event: CdkDragDrop<any[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    } else {
+drop(event: CdkDragDrop<any[]>) {
+  if (event.previousContainer === event.container) {
+    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex  );
+    console.log(event.container.data)
+  }
+  else{
+    let goal = event.item.data;
+    let status = this.determineRole(event.container.id);
 
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
+    this.updateMyTask(event.item.data, status);
 
 
+    transferArrayItem(
 
-      );
-      let goal = event.item.data;
-
-      console.log(goal.status);
-      let status = this.determineRole(event.container.id);
-      this._scrumdataService.updateTask(goal).subscribe(
-        data => {console.log('success', data)},
-
-        error => {console.error('error'), error}
-      )
-
-
-
-    }
-
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
 
 
 
 
 
   }
+}
 
 
   getProjectGoals() {
@@ -111,27 +99,27 @@ export class ScrumboardComponent implements OnInit {
 
 
 
-        /*for (let participant of this.participants) {
+        for (let participant of this._participants) {
           for (let goal of participant['scrumgoal_set']){
             if (goal['status'] == 0 && goal['user'] == participant['id']) {
-              this.tftw.push([goal['id'], goal['name']]);
+              this.tftw.push(goal);
             }
             else if (goal['status'] == 1 && goal['user'] == participant['id']) {
-              this.tftd.push([goal['id'], goal['name']]);
+              this.tftd.push(goal);
             }
             else if (goal['status'] == 2 && goal['user'] == participant['id']) {
-              this.verify.push([goal['id'], goal['name']]);
+              this.verify.push(goal);
             }
             else if (goal['status'] == 3 && goal['user'] == participant['id'])
             {
-              this.done.push([goal['id'], goal['name']]);
+              this.done.push(goal);
             }
             else{
               break;
             }
           }
 
-        }*/
+        }
       },
       error => {console.error('Error', error)}
 
@@ -160,6 +148,18 @@ export class ScrumboardComponent implements OnInit {
       error => {
         console.log('sprint error', JSON.stringify(error));
         this.feedback = "Sprint Started";
+      }
+    )
+  }
+
+  updateMyTask(goal, status) {
+    this._scrumdataService.updateTask(goal, status).subscribe(
+      data => {
+        console.log("success", data);
+      },
+
+      error => {
+        console.error("error", error);
       }
     )
   }

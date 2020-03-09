@@ -13,6 +13,7 @@ export class CreateprojectComponent implements OnInit {
   data = JSON.parse(localStorage.getItem('Authobj'))
   userDetails = JSON.parse(localStorage.getItem('Authuser'))
   createProject = new CreateNewProject(this.data.name, this.userDetails.email, this.userDetails.password, '', '')
+  feedback = '';
 
   constructor(private _scrumdataService: ScrumdataService, private _router: Router) { }
 
@@ -23,7 +24,8 @@ export class CreateprojectComponent implements OnInit {
     this._scrumdataService.createAProject(this.createProject).subscribe(
       data => {
         console.log('Success', data);
-        this._router.navigate(['/scrumboard'], this.data['project_id']);
+        this.feedback = data['message'];
+        this._router.navigate(['/scrumboard', this.data['project_id']]);
       },
 
       error => {
