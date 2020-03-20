@@ -9,10 +9,6 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragEnter, CdkDragE
   styleUrls: ['./scrumboard.component.css']
 })
 export class ScrumboardComponent implements OnInit {
-
-
-  constructor(private _route: ActivatedRoute, private _scrumdataService: ScrumdataService, private _router: Router) { }
-
   public tftw: any[] = [];
   public tftd: any[] = [];
   public verify: any[] = [];
@@ -21,6 +17,7 @@ export class ScrumboardComponent implements OnInit {
   feedback = '';
   projdet :any;
   theuser = JSON.parse(localStorage.getItem('Authobj'));
+  theproject_id = this.theuser.project_id;
   username=this.theuser.name;
   role = String(this.theuser.role);
   rolee=this.theuser.role_id;
@@ -29,13 +26,19 @@ export class ScrumboardComponent implements OnInit {
   status = ''
   roleid = 0
   theparticipants = JSON.parse(localStorage.getItem('participants'))
-  _participants = this.theparticipants;
+  _participants :any;
 
   yourname = this.theuser.name;
 
+  constructor(private _route: ActivatedRoute, private _scrumdataService: ScrumdataService, private _router: Router) {
+      this.project_id = parseInt((this._route.snapshot.paramMap.get('project_id')));
+  }
+
+
+
   ngOnInit(): void {
 
-    this.project_id = parseInt((this._route.snapshot.paramMap.get('project_id')));
+
     this.getProjectGoals();
     console.log(this.tftw);
 
@@ -63,32 +66,30 @@ export class ScrumboardComponent implements OnInit {
     }
   }
 
-drop(event: CdkDragDrop<any[]>) {
-  if (event.previousContainer === event.container) {
-    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex  );
-    console.log(event.container.data)
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      console.log(event.container.data)
+
+
+
+    } else {
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      console.log(event.container.data)
+
+      let goal = event.item.data;
+      event.item.data.status = this.determineRole(event.container.id);
+      this._scrumdataService.updateTask(goal)
+        .subscribe(
+          res => {
+            console.log('Success');
+          },
+          error => {
+            console.log('error ', error);
+          })
+
+    }
   }
-  else{
-    let goal = event.item.data;
-    let status = this.determineRole(event.container.id);
-
-    this.updateMyTask(event.item.data, status);
-
-
-    transferArrayItem(
-
-      event.previousContainer.data,
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex
-    );
-
-
-
-
-
-  }
-}
 
 
   getProjectGoals() {
@@ -96,10 +97,11 @@ drop(event: CdkDragDrop<any[]>) {
       data => {console.log(data),
         console.log(data['data'])
         localStorage.setItem('participants', JSON.stringify(data['data']));
+        this._participants = data['data'];
 
 
 
-        for (let participant of this._participants) {
+      /*  for (let participant of this._participants) {
           for (let goal of participant['scrumgoal_set']){
             if (goal['status'] == 0 && goal['user'] == participant['id']) {
               this.tftw.push(goal);
@@ -119,7 +121,7 @@ drop(event: CdkDragDrop<any[]>) {
             }
           }
 
-        }
+        }*/
       },
       error => {console.error('Error', error)}
 
@@ -152,10 +154,11 @@ drop(event: CdkDragDrop<any[]>) {
     )
   }
 
-  updateMyTask(goal, status) {
+  /*updateMyTask(goal, status) {
     this._scrumdataService.updateTask(goal, status).subscribe(
       data => {
         console.log("success", data);
+
       },
 
       error => {
@@ -164,7 +167,7 @@ drop(event: CdkDragDrop<any[]>) {
     )
   }
 
-  /*sortGoalSet() {
+  sortGoalSet() {
     for (let participant of this.participants) {
       for (let goal of participant['scrumgoal_set']){
         if (goal['status'] == 0 && goal['user'] == participant['id']) {

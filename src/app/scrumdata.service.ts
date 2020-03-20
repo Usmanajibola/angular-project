@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Scrumuser, ScrumUserLoginData, CreateNewProject, ChangeRole, LoginCred,  Creategoal} from './scrumuser';
 import {Observable} from 'rxjs/Rx';
+import {Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class ScrumdataService {
   logincred: any;
   body: string;
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient, private _router:Router) { }
 
   _url = 'https://liveapi.chatscrum.com/scrum/api/scrumusers/';
 
@@ -46,12 +47,12 @@ public httpOptions = {
     return this._http.get<any>(this._scrumProjectUrl + project_id, this.httpOptions);
   }
 
-  updateTask(goal, status): Observable<any>{
+  updateTask(goal): Observable<any>{
     this.token = localStorage.getItem('token')
     this.logincred = JSON.parse(localStorage.getItem('Authuser'))
     this.logincred = btoa(`${this.logincred.email}:${this.logincred.password}`);
     console.log(this.logincred);
-    return this._http.patch<any>(this._taskUpdateUrl + goal.id + '/', {status: parseInt(status)}, {
+    return this._http.patch<any>(this._taskUpdateUrl + goal.id + '/', {status: goal.status}, {
       headers : new HttpHeaders().set('Authorization', `Basic ${this.logincred}==`)
     });
 
