@@ -52,7 +52,7 @@ public httpOptions = {
     this.logincred = JSON.parse(localStorage.getItem('Authuser'))
     this.logincred = btoa(`${this.logincred.email}:${this.logincred.password}`);
     console.log(this.logincred);
-    return this._http.patch<any>(this._taskUpdateUrl + goal.id + '/', {status: goal.status}, {
+    return this._http.patch<any>(this._taskUpdateUrl + goal.id + '/', {'status': goal.status, 'id':goal.id, 'user':goal.user}, {
       headers : new HttpHeaders().set('Authorization', `Basic ${this.logincred}==`)
     });
 

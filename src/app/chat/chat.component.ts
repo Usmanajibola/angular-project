@@ -68,7 +68,12 @@ getCurrentTime() {
       this.chat_text = '';
       this.userLoginData.projectname = '';
 
-    
+      window.setInterval(function () {
+     const elem = document.getElementById('data');
+     elem.scrollTop = elem.scrollHeight;
+   }, 5000);
+
+
 
     }
   }

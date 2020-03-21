@@ -15,7 +15,7 @@ export class CreategoalComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  userid = this._route.snapshot.paramMap.get('user_id');
+  userid =this._route.snapshot.paramMap.get('user_id');
   usercred = JSON.parse(localStorage.getItem('Authobj'));
   role_id = localStorage.getItem('goal');
   creategoal = new Creategoal('m' + this.role_id, this.userid, this.usercred.project_id, '');

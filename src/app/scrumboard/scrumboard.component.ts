@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 import { ScrumdataService } from '../scrumdata.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragEnter, CdkDragExit } from '@angular/cdk/drag-drop';
+
 
 @Component({
   selector: 'app-scrumboard',
@@ -9,59 +10,45 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragEnter, CdkDragE
   styleUrls: ['./scrumboard.component.css']
 })
 export class ScrumboardComponent implements OnInit {
-  public tftw: any[] = [];
-  public tftd: any[] = [];
+  public taskForTheWeek: any[] = [];
+  public taskForTheDay: any[] = [];
   public verify: any[] = [];
   public done: any[] = [];
-
-  feedback = '';
-  projdet :any;
-  theuser = JSON.parse(localStorage.getItem('Authobj'));
-  theproject_id = this.theuser.project_id;
-  username=this.theuser.name;
-  role = String(this.theuser.role);
-  rolee=this.theuser.role_id;
-  project_id = 0
-  goal_id = 0
-  status = ''
-  roleid = 0
-  theparticipants = JSON.parse(localStorage.getItem('participants'))
-  _participants :any;
-
+  role: any;
+  trail: any;
+  _participants: any;
+  project_id = 0;
+  rtn: any;
+  rolee: any;
+  username: any;
+  id: string;
+  goals: any;
+  projectid: any;
+  theuser: any = JSON.parse(localStorage.getItem('Authobj'));
   yourname = this.theuser.name;
+  feedback = '';
 
-  constructor(private _route: ActivatedRoute, private _scrumdataService: ScrumdataService, private _router: Router) {
-      this.project_id = parseInt((this._route.snapshot.paramMap.get('project_id')));
+  constructor(private _scrumdataService: ScrumdataService, private _route: ActivatedRoute, private _router: Router) {
+    this.project_id = parseInt((this._route.snapshot.paramMap.get('project_id')));
   }
-
-
 
   ngOnInit(): void {
-
-
-    this.getProjectGoals();
-    console.log(this.tftw);
-
-
-
-
-
-
+this.getProjectGoals();
   }
 
-  determineRole(val) {
 
-
-    if (val == 'cdk-drop-list-3') {
+  calcultateRole(val) {
+    val = val.split("-");
+    if ((val[3] % 4) === 3) {
       return 3;
     }
-    else if (val == 'cdk-drop-list-2') {
+    if ((val[3] % 4) === 2) {
       return 2;
     }
-    else if (val == 'cdk-drop-list-1') {
+    if ((val[3] % 4) === 1) {
       return 1;
     }
-    else if (val == 'cdk-drop-list-0') {
+    if ((val[3] % 4) === 0) {
       return 0;
     }
   }
@@ -69,20 +56,16 @@ export class ScrumboardComponent implements OnInit {
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      console.log(event.container.data)
-
-
 
     } else {
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
-      console.log(event.container.data)
 
       let goal = event.item.data;
-      event.item.data.status = this.determineRole(event.container.id);
+      event.item.data.status = this.calcultateRole(event.container.id);
       this._scrumdataService.updateTask(goal)
         .subscribe(
           res => {
-            console.log('Success');
+            console.log('Success ', res);
           },
           error => {
             console.log('error ', error);
@@ -91,58 +74,15 @@ export class ScrumboardComponent implements OnInit {
     }
   }
 
-
-  getProjectGoals() {
-    this._scrumdataService.allProjectGoals(this.project_id).subscribe(
-      data => {console.log(data),
-        console.log(data['data'])
-        localStorage.setItem('participants', JSON.stringify(data['data']));
-        this._participants = data['data'];
-
-
-
-      /*  for (let participant of this._participants) {
-          for (let goal of participant['scrumgoal_set']){
-            if (goal['status'] == 0 && goal['user'] == participant['id']) {
-              this.tftw.push(goal);
-            }
-            else if (goal['status'] == 1 && goal['user'] == participant['id']) {
-              this.tftd.push(goal);
-            }
-            else if (goal['status'] == 2 && goal['user'] == participant['id']) {
-              this.verify.push(goal);
-            }
-            else if (goal['status'] == 3 && goal['user'] == participant['id'])
-            {
-              this.done.push(goal);
-            }
-            else{
-              break;
-            }
-          }
-
-        }*/
-      },
-      error => {console.error('Error', error)}
-
-
-    )
-
-  }
-
-  onClick(tftw) {
-    let user = tftw['user']['id']
-    localStorage.setItem('goal', JSON.stringify(tftw["id"]));
+  onClick(task_for_the_week) {
+    let user = task_for_the_week['user']['id']
+    localStorage.setItem('goal', JSON.stringify(task_for_the_week["id"]));
     this._router.navigate(['/creategoal/', user])
   }
 
-  onClickrole(participant) {
-    this._router.navigate(['/changerole/', participant["id"]]);
-  }
-
   startSprint() {
-    this.projdet = JSON.parse(localStorage.getItem('Authobj'));
-    this._scrumdataService.createSprint(this.projdet.project_id).subscribe(
+    this.projectid = JSON.parse(localStorage.getItem('Authobj'));
+    this._scrumdataService.createSprint(this.projectid.project_id).subscribe(
       data => {
         this.feedback = "sprint just started"
         console.log("successfull: sprint : " + data["message"])
@@ -153,48 +93,23 @@ export class ScrumboardComponent implements OnInit {
       }
     )
   }
-
-  /*updateMyTask(goal, status) {
-    this._scrumdataService.updateTask(goal, status).subscribe(
+  onClickrole(participant) {
+    this._router.navigate(['/changerole/', participant["id"]]);
+  }
+  getProjectGoals() {
+    this._scrumdataService.allProjectGoals(this.project_id).subscribe(
       data => {
-        console.log("success", data);
-
+        console.log(data)
+        this._participants = data['data'];
+        this.role = JSON.parse(localStorage.getItem('Authobj'));
+        this.rolee = this.role.role;
+        this.username = this.role.name;
+        this.id = this.role.role_id;
       },
-
       error => {
-        console.error("error", error);
+        console.log('error', error)
       }
     )
   }
-
-  sortGoalSet() {
-    for (let participant of this.participants) {
-      for (let goal of participant['scrumgoal_set']){
-        if (goal['status'] == 0 && goal['user'] == participant['id']) {
-          this.tftw.push(goal['name']);
-        }
-        else if (goal['status'] == 1 && goal['user'] == participant['id']) {
-          this.tftd.push(goal['name']);
-        }
-        else if (goal['status'] == 2 && goal['user'] == participant['id']) {
-          this.verify.push(goal['name']);
-        }
-        else if (goal['status'] == 3 && goal['user'] == participant['id'])
-        {
-          this.done.push(goal['name']);
-        }
-        else{
-          break;
-        }
-      }
-        console.log(this.participants)
-    }
-
-  }*/
-
-
-
-
-
 
 }
