@@ -20,7 +20,7 @@ export class ChangeroleComponent implements OnInit {
   }
 
 
-  roles = ['Developer', 'Owner', 'Admin', 'QA'];
+  roles = ['Developer', 'Owner', 'Admin', 'Quality Analyst'];
   roleid = this._router.snapshot.paramMap.get('role_id');
   logincred = JSON.parse(localStorage.getItem('Authobj'));
   role = this.logincred.role;
