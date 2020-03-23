@@ -3,7 +3,7 @@
 <section>
   <div class="container">
   <h3>Chat</h3>
-  <div id = "data">
+  <div  id = "data">
   <ul>
     <li *ngFor="let message of messages">
       <div class="chat-container darker" *ngIf = "message.username == getUsername()">
@@ -23,8 +23,8 @@
   <label for="chat-text">
     <b>Message</b>
   </label>
-  <input type="text" placeholder="Type message here" name="chat-text" required [(ngModel)] = "chat_text" />
-  <button type="submit" class="btn"  (click) = "sendMessage(chat_text)">Send</button>
+  <input type="text" placeholder="Type message here" name="chat-text" required [(ngModel)] = "scrumLoginUserModel.projectname" />
+  <button type="submit" class="btn"  (click) = "sendMessage()">Send</button>
 </form>
 </div>
 </div>
