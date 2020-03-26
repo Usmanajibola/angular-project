@@ -109,7 +109,7 @@
 
                 <!--Task Movement Developer with the login user-->
                 <tr *ngIf="rolee == 'Developer' && participant['user']['nickname'] == username">
-                    <td cdkDropList #task_for_the_week="cdkDropList" [cdkDropListData]="taskForTheWeek" [cdkDropListConnectedTo]="[task_for_the_day]" (cdkDropListDropped)="drop($event)">
+                    <td cdkDropList #task_for_the_week="cdkDropList" [cdkDropListData]="taskForTheWeek" [cdkDropListConnectedTo]="[task_for_the_day, task_verified]" (cdkDropListDropped)="drop($event)">
                         <div *ngFor="let goal of participant['scrumgoal_set']" [cdkDragData]="goal" cdkDrag>
                             <div *ngIf="goal['status'] == 0 && goal['user'] == participant['id']">
                                 {{ goal['name'] }}<br> {{ goal['id'] }}
