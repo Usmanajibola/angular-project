@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Scrumuser, ScrumUserLoginData, CreateNewProject, ChangeRole, LoginCred,  Creategoal} from './scrumuser';
 import {Observable} from 'rxjs/Rx';
 import {Router } from '@angular/router';
+import {environment} from '../environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -11,20 +12,21 @@ export class ScrumdataService {
   token: any;
   logincred: any;
   body: string;
+  public url = environment.url;
 
   constructor(private _http: HttpClient, private _router:Router) { }
 
-  _url = 'https://liveapi.chatscrum.com/scrum/api/scrumusers/';
+  _url =  this.url + '/scrum/api/scrumusers/';
 
-  _loginurl = 'https://liveapi.chatscrum.com/scrum/api-token-auth/';
+  _loginurl = this.url + '/scrum/api-token-auth/';
 
-  _scrumProjectUrl = 'https://liveapi.chatscrum.com/scrum/api/scrumprojects/';
+  _scrumProjectUrl = this.url + '/scrum/api/scrumprojects/';
 
-  _taskUpdateUrl = ' https://liveapi.chatscrum.com/scrum/api/scrumgoals/';
+  _taskUpdateUrl = this.url + '/scrum/api/scrumgoals/';
 
-  _changerole = 'https://liveapi.chatscrum.com/scrum/api/scrumprojectroles/';
+  _changerole = this.url + '/scrum/api/scrumprojectroles/';
 
-  _sprintUrl = "https://liveapi.chatscrum.com/scrum/api/scrumsprint/";
+  _sprintUrl = this.url + "/scrum/api/scrumsprint/";
 
 
 public httpOptions = {
